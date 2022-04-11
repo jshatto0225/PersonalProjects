@@ -8,6 +8,10 @@ class Vector{
         float* vector;
     public:
         Vector(){}
+        Vector(int l, float vals[]){
+            vector = vals;
+            s = l;
+        }
         float getVal(int i){
             return vector[i];
         }
