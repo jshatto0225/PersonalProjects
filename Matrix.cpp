@@ -5,14 +5,13 @@ using namespace std;
 
 class Matrix{
     private:
-        int x;
         int y;
         Vector* m;
     public:
         Matrix(){}
-        Matrix(int r, int c, Vector* vals){
-            x, y = r, c;
-            m = new Vector[y];
+        Matrix(int r, Vector vals[]){
+            y = r;
+            m = vals;
         }
         float getVal(int r, int c){
             return m[r].getVal(c);
@@ -24,7 +23,3 @@ class Matrix{
             m[r] = v;
         }
 };
-
-int main(){
-    return 0;
-}
