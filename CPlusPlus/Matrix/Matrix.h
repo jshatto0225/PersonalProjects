@@ -9,6 +9,7 @@ class Matrix {
     public:
     Matrix(int, int);
     Matrix(double**, int, int);
+    Matrix(double [ ], int, int);
     Matrix();
     Matrix(const Matrix&);
     ~Matrix();
@@ -37,6 +38,9 @@ class Matrix {
     Matrix scaleRow(Matrix&, int, double);
     double* subtract(double*, double*);
     double* add(double*, double*);
+
+    int getRows() { return rows_; }
+    int getCols() { return cols_; }
 
     private:
     int rows_, cols_;
