@@ -5,6 +5,7 @@ using std::istream;
 using std::ostream;
 
 // Constructors
+// Initializes matrix of size row, cols to 0
 Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
     allocateSpace();
     for (int i = 0; i < rows_; i++) {
@@ -13,6 +14,7 @@ Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
         }
     }
 }
+// Initializes matrix from double pointer
 Matrix::Matrix(double** m, int rows, int cols) : rows_(rows), cols_(cols) {
     allocateSpace();
     for (int i = 0; i < rows_; i++) {
@@ -21,9 +23,20 @@ Matrix::Matrix(double** m, int rows, int cols) : rows_(rows), cols_(cols) {
         }
     }
 }
+// Initializes matrix from array
+Matrix::Matrix(double arr [ ], int r, int c) : rows_(r), cols_(c) {
+    allocateSpace();
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            p[i][j] = arr[(i * (cols_)) + j];
+        }
+    }
+}
+// Initializes matrix of size 1, 1 to 0
 Matrix::Matrix() : rows_(1), cols_(1) {
     p[0][0] = 0;
 }
+// Initializes matrix with values from matrix passed in
 Matrix::Matrix(const Matrix& m) : rows_(m.rows_), cols_(m.cols_) {
     allocateSpace();
     for (int i = 0; i < rows_; i++) {
@@ -32,6 +45,7 @@ Matrix::Matrix(const Matrix& m) : rows_(m.rows_), cols_(m.cols_) {
         }
     }
 }
+// Deletes matrix attribute p
 Matrix::~Matrix() {
     for (int i = 0; i < rows_; i++) {
         delete [ ] p[i];
@@ -40,6 +54,7 @@ Matrix::~Matrix() {
 }
 
 // Operator overloads
+// Copies matrix
 Matrix& Matrix::operator=(const Matrix& m) {
     if (this == &m) {
         return *this;
@@ -61,6 +76,7 @@ Matrix& Matrix::operator=(const Matrix& m) {
     }
     return *this;
 }
+// Add matrices
 Matrix& Matrix::operator+=(const Matrix& m) {
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -69,6 +85,7 @@ Matrix& Matrix::operator+=(const Matrix& m) {
     }
     return *this;
 }
+// Subtract matrices
 Matrix& Matrix::operator-=(const Matrix& m) {
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -77,6 +94,7 @@ Matrix& Matrix::operator-=(const Matrix& m) {
     }
     return *this;
 }
+// Multiply matrix by scalar or other matrix
 Matrix& Matrix::operator*=(double k) {
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -97,6 +115,7 @@ Matrix& Matrix::operator*=(const Matrix& m) {
     *this = temp;
     return *this;
 }
+// Devide matrix by scalar
 Matrix& Matrix::operator/=(double k) {
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -107,11 +126,13 @@ Matrix& Matrix::operator/=(double k) {
 }
 
 // Matrix operations
+// Swaps matrix rows
 void Matrix::swapRows(int r1, int r2) {
     double* temp = p[r1];
     p[r1] = p[r2];
     p[r2] = temp;
 }
+// Transposes matrix
 Matrix Matrix::transpose() {
     Matrix tran(cols_, rows_);
     for (int i = 0; i < rows_; i++) {
@@ -121,7 +142,7 @@ Matrix Matrix::transpose() {
     }
     return tran;
 }
-// IDK
+// Gets matrix to reduced row echelon form
 Matrix Matrix::rref() {
     Matrix ref(*this);
     int rows = ref.rows_;
@@ -160,12 +181,11 @@ Matrix Matrix::rref() {
     }
     return ref;
 }
-
+// Inverts matrix
 Matrix Matrix::invert() {
     Matrix I = createIdentity(rows_);
     Matrix AI = augment(*this, I);
     Matrix U = AI.rref();
-    // cout << *this << endl << I << endl << AI << endl << U << endl;
     Matrix inverse(rows_, cols_);
     for (int i = 0; i < inverse.rows_; i++) {
         for (int j = 0; j < inverse.cols_; j++) {
@@ -174,7 +194,7 @@ Matrix Matrix::invert() {
     }
     return inverse;
 }
-
+// Creates identity matrix
 Matrix Matrix::createIdentity(int n) {
     Matrix temp(n, n);
     for (int i = 0; i < temp.rows_; i++) {
@@ -184,6 +204,7 @@ Matrix Matrix::createIdentity(int n) {
     }
     return temp;
 }
+// Augments matrix m1 with matrix m2
 Matrix Matrix::augment(Matrix m1, Matrix m2) {
     Matrix aug(m1.rows_, m1.cols_ + m2.cols_);
     for (int i = 0; i < m1.rows_; i++) {
@@ -193,13 +214,14 @@ Matrix Matrix::augment(Matrix m1, Matrix m2) {
     }
     return aug;
 }
-
+// Allocates space for p
 void Matrix::allocateSpace() {
     p = new double* [rows_];
     for (int i = 0; i < rows_; i++) {
         p[i] = new double[cols_];
     }
 }
+// Scale row by scalar
 Matrix Matrix::scaleRow(Matrix& m, int r, double k) {
     Matrix scaled(m);
     for (int i = 0; i < scaled.cols_; i++) {
